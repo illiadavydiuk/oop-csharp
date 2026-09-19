@@ -2,9 +2,9 @@
 
 public abstract class BankAccount
 {
-    public string AccountNumber { get; set; }
-    public string Owner { get; set; }
-    public decimal Balance { get; protected set; }
+    protected string AccountNumber;
+    protected string Owner;
+    protected decimal Balance;
 
     protected BankAccount(string accountNumber, string owner, decimal balance)
     {

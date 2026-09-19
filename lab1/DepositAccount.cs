@@ -2,7 +2,7 @@
 
 public class DepositAccount : BankAccount
 {
-    public decimal InterestRate { get; set; }
+    private decimal _interestRate;
 
     public DepositAccount(
         string accountNumber,
@@ -11,7 +11,7 @@ public class DepositAccount : BankAccount
         decimal interestRate)
         : base(accountNumber, owner, balance)
     {
-        InterestRate = interestRate;
+        _interestRate = interestRate;
     }
     
     public override void ShowBalance()
@@ -51,7 +51,7 @@ public class DepositAccount : BankAccount
     
     public void CalculateInterest()
     {
-        decimal interest = Balance * InterestRate / 100;
+        decimal interest = Balance * _interestRate / 100;
         Balance += interest;
         
         Console.WriteLine($"Нараховано відсотки: {interest} грн \n" +

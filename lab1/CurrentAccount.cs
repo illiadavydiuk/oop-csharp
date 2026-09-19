@@ -2,7 +2,7 @@
 
 public class CurrentAccount : BankAccount
 {
-    public decimal CreditLimit { get; private set; }
+    private decimal _creditLimit;
 
     public CurrentAccount(
         string accountNumber,
@@ -10,14 +10,14 @@ public class CurrentAccount : BankAccount
         decimal balance)
         : base(accountNumber, owner, balance)
     {
-        CreditLimit = 0;
+        _creditLimit = 0;
     }
 
     public override void ShowBalance()
     {
         Console.WriteLine($"\nБаланс: {Balance}");
-        Console.WriteLine($"Кредитний ліміт: {CreditLimit}");
-        Console.WriteLine($"Всього доступно: {Balance + CreditLimit}\n");
+        Console.WriteLine($"Кредитний ліміт: {_creditLimit}");
+        Console.WriteLine($"Всього доступно: {Balance + _creditLimit}\n");
     }
 
     public override void Deposit(decimal amount)
@@ -40,7 +40,7 @@ public class CurrentAccount : BankAccount
             return;
         }
 
-        if (amount > Balance + CreditLimit)
+        if (amount > Balance + _creditLimit)
         {
             Console.WriteLine("Перевищено доступний баланс і кредитний ліміт");
             return;
@@ -57,7 +57,7 @@ public class CurrentAccount : BankAccount
             Console.WriteLine("Кредитний ліміт не може бути від'ємним");
             return;
         }
-        CreditLimit = creditLimit;
-        Console.WriteLine($"Кредитний ліміт встановлено в розмірі {CreditLimit} грн.");
+        _creditLimit = creditLimit;
+        Console.WriteLine($"Кредитний ліміт встановлено в розмірі {_creditLimit} грн.");
     }
 }

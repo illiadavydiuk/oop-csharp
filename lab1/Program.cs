@@ -1,6 +1,6 @@
 ﻿using lab1;
 
-DepositAccount depositAccount = new DepositAccount("123456789", "Illia", 1000, 5m);
+DepositAccount depositAccount = new DepositAccount("123456789", "Illia", 1000, 2.5m);
 
 Console.WriteLine("Депозитний рахунок");
 depositAccount.ShowBalance();

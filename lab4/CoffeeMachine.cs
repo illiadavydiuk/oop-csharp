@@ -2,44 +2,44 @@
 
 public class CoffeeMachine : ICoffeeMachine
 {
-    private int water;
-    private int coffeeBeans;
-    private bool isWaterHeated;
+    private int _water;
+    private int _coffeeBeans;
+    private bool _isWaterHeated;
     
-    public int Water => water;
-    public int CoffeeBeans => coffeeBeans;
-    public bool IsWaterHeated => isWaterHeated;
+    public int Water => _water;
+    public int CoffeeBeans => _coffeeBeans;
+    public bool IsWaterHeated => _isWaterHeated;
 
     public CoffeeMachine(int water, int coffeeBeans, bool isWaterHeated)
     {
-        this.water = water;
-        this.coffeeBeans = coffeeBeans;
-        this.isWaterHeated = false;
+        _water = water;
+        _coffeeBeans = coffeeBeans;
+        _isWaterHeated = isWaterHeated;
     }
     
     private void HeatWater(int amount)
     {
         Console.WriteLine("Нагріваємо воду...");
-        water -= amount;
-        isWaterHeated = true;
+        _water -= amount;
+        _isWaterHeated = true;
     }
 
     private bool GrindBeans(int amount)
     {
-        if (amount > coffeeBeans)
+        if (amount > _coffeeBeans)
         {
             Console.WriteLine("Недостатньо кавових зерен");
             return false;
         }
 
         Console.WriteLine($"Мелемо {amount} г зерен...");
-        coffeeBeans -= amount;
+        _coffeeBeans -= amount;
         return true;
     }
 
     private bool HasEnoughWater(int amount)
     {
-        if (amount > water)
+        if (amount > _water)
         {
             Console.WriteLine("Недостатньо води");
             return false;
