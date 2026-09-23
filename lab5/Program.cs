@@ -1,69 +1,16 @@
 ﻿using lab5;
 
-List<IDigitalWallet> wallets = new();
-
-IDigitalWallet wallet1 = new DigitalWallet(
-    1000,
-    "0987654321",
-    "qwerty");
-
-wallet1.SetAuthProvider(
-    new Privat24AuthProvider("0987654321", "qwerty"));
-
-wallets.Add(wallet1);
-
-
-IDigitalWallet wallet2 = new DigitalWallet(
-    500,
-    "user@gmail.com",
-    "1234");
-
-wallet2.SetAuthProvider(
-    new GmailAuthProvider("user@gmail.com", "1234"));
-
-wallets.Add(wallet2);
-
+List<IDigitalWallet> wallets = CreateWallets();
 
 while (true)
 {
-    IDigitalWallet? currentWallet = null;
-    
-    while (currentWallet == null)
+    IDigitalWallet currentWallet = AuthenticateUser(wallets);
+
+    bool isRunning = true;
+
+    while (isRunning)
     {
-        Console.Write("\nLogin: ");
-        string enteredLogin = Console.ReadLine() ?? "";
-
-        Console.Write("Password: ");
-        string enteredPassword = Console.ReadLine() ?? "";
-
-        foreach (IDigitalWallet wallet in wallets)
-        {
-            try
-            {
-                wallet.Authenticate(enteredLogin, enteredPassword);
-                currentWallet = wallet;
-                break;
-            }
-            catch (UnauthorizedAccessException)
-            {
-            }
-        }
-
-        if (currentWallet == null)
-        {
-            Console.WriteLine("Invalid credentials");
-        }
-    }
-    
-    while (currentWallet != null)
-    {
-        Console.WriteLine("\n=== Menu ===");
-        Console.WriteLine("1. Deposit");
-        Console.WriteLine("2. Withdraw");
-        Console.WriteLine("3. Check balance");
-        Console.WriteLine("4. Transaction log");
-        Console.WriteLine("5. Logout");
-        Console.WriteLine("0. Exit");
+        ShowMenu();
 
         Console.Write("Choose: ");
         string choice = Console.ReadLine() ?? "";
@@ -71,65 +18,24 @@ while (true)
         switch (choice)
         {
             case "1":
-                Console.Write("Amount: ");
-
-                if (decimal.TryParse(
-                        Console.ReadLine(),
-                        out decimal depositAmount))
-                {
-                    currentWallet.Deposit(depositAmount);
-                }
-                else
-                {
-                    Console.WriteLine("Invalid amount.");
-                }
-
+                WalletWrapper.Deposit(currentWallet);
                 break;
 
             case "2":
-                Console.Write("Amount: ");
-
-                if (decimal.TryParse(
-                        Console.ReadLine(),
-                        out decimal withdrawAmount))
-                {
-                    currentWallet.Withdraw(withdrawAmount);
-                }
-                else
-                {
-                    Console.WriteLine("Invalid amount.");
-                }
-
+                WalletWrapper.Withdraw(currentWallet);
                 break;
 
             case "3":
-                Console.WriteLine(
-                    $"Balance: {currentWallet.CheckBalance()}");
+                WalletWrapper.CheckBalance(currentWallet);
                 break;
 
             case "4":
-                Console.WriteLine("\n=== Transaction log ===");
-
-                List<string> transactions =
-                    currentWallet.GetTransactionLog();
-
-                if (transactions.Count == 0)
-                {
-                    Console.WriteLine("No transactions yet.");
-                }
-                else
-                {
-                    foreach (string transaction in transactions)
-                    {
-                        Console.WriteLine(transaction);
-                    }
-                }
-
+                WalletWrapper.GetTransactionLog(currentWallet);
                 break;
 
             case "5":
                 Console.WriteLine("Logging out...");
-                currentWallet = null;
+                isRunning = false;
                 break;
 
             case "0":
@@ -141,4 +47,77 @@ while (true)
                 break;
         }
     }
+}
+
+
+static List<IDigitalWallet> CreateWallets()
+{
+    List<IDigitalWallet> wallets = new();
+
+    IDigitalWallet wallet1 = new DigitalWallet(
+        1000,
+        "0987654321",
+        "qwerty");
+
+    wallet1.SetAuthProvider(
+        new Privat24AuthProvider("0987654321", "qwerty"));
+
+    wallets.Add(wallet1);
+
+
+    IDigitalWallet wallet2 = new DigitalWallet(
+        500,
+        "user@gmail.com",
+        "1234");
+
+    wallet2.SetAuthProvider(
+        new GmailAuthProvider("user@gmail.com", "1234"));
+
+    wallets.Add(wallet2);
+
+    return wallets;
+}
+
+
+static IDigitalWallet AuthenticateUser(
+    List<IDigitalWallet> wallets)
+{
+    while (true)
+    {
+        Console.Write("\nLogin: ");
+        string enteredLogin = Console.ReadLine() ?? "";
+
+        Console.Write("Password: ");
+        string enteredPassword = Console.ReadLine() ?? "";
+        string? errorM = null;
+        foreach (IDigitalWallet wallet in wallets)
+        {
+            try
+            {
+                wallet.Authenticate(
+                    enteredLogin,
+                    enteredPassword);
+
+                return wallet;
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                errorM = ex.Message;
+            }
+        }
+
+        Console.WriteLine(errorM);
+    }
+}
+
+
+static void ShowMenu()
+{
+    Console.WriteLine("\n=== Menu ===");
+    Console.WriteLine("1. Deposit");
+    Console.WriteLine("2. Withdraw");
+    Console.WriteLine("3. Check balance");
+    Console.WriteLine("4. Transaction log");
+    Console.WriteLine("5. Logout");
+    Console.WriteLine("0. Exit");
 }
