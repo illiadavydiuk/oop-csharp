@@ -31,12 +31,6 @@ public class DigitalWallet : IDigitalWallet
             throw new UnauthorizedAccessException("Invalid credentials");
         }
         
-        // if (login != _login || 
-        //     PasswordHasher.Hash(password) != _hashedPassword)
-        // {
-        //     throw new UnauthorizedAccessException("Invalid credentials");
-        // }
-        
         _isAuthenticated = true;
     }
 
