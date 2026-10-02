@@ -103,11 +103,13 @@ public class CarDealer : ICarDealer
             myCar,
             otherCar);
 
-        BuyCarDealer(otherCar);
+        
         SellCar(myCar);
-
-        otherDealer.BuyCarDealer(myCar);
         otherDealer.SellCar(otherCar);
+        
+        BuyCarDealer(otherCar);
+        otherDealer.BuyCarDealer(myCar);
+        
     }
 
     private void ValidateExchange(
@@ -126,14 +128,18 @@ public class CarDealer : ICarDealer
             throw new InvalidOperationException(
                 "Other car is not in partner inventory.");
         }
+        
+        decimal balanceAfterSell = GetBalance() + myCar.Price;
 
-        if (GetBalance() < otherCar.Price)
+        if (balanceAfterSell < otherCar.Price)
         {
             throw new InvalidOperationException(
                 "Not enough money to buy other car.");
         }
 
-        if (otherDealer.GetBalance() < myCar.Price)
+        decimal otherBalanceAfterSell = otherDealer.GetBalance() + otherCar.Price;
+        
+        if (otherBalanceAfterSell < myCar.Price)
         {
             throw new InvalidOperationException(
                 "Partner dealer does not have enough money.");
