@@ -104,11 +104,11 @@ public class SqlSelectBuilder<T>
     {
         Expression body = expression.Body; //беремо після стрілки
 
-        if (body is UnaryExpression unary)
+        if (body is UnaryExpression unary) // прибирає перетворення типів
             body = unary.Operand;
 
         if (body is not MemberExpression member ||
-            member.Member is not System.Reflection.PropertyInfo) // перевірка на те чи передано властивість
+            member.Member is not System.Reflection.PropertyInfo) // перевірка на те чи це властивість класу
         {
             throw new ArgumentException(
                 "Expression must select a property.");
